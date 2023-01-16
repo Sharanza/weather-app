@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 const API_KEY = '3db70ceb3f7893404ff3c84127466fa5';
 
-export default function Home() {
+export default function Home() {  
+
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState<any>({});
 
@@ -15,8 +16,9 @@ export default function Home() {
       console.log(data);
       if (data?.cod === '404') throw data;
       setWeatherData(data);
-    } catch (error) {      
-      console.log(error);
+    } catch (err) { 
+      console.log(err);
+      return alert('City not found');
     }
   }
 
@@ -37,7 +39,7 @@ export default function Home() {
           transform: 'translate(-50%, -50%)',
         }}
       >
-      <Paper withBorder p='lg' style={{maxWidth: '500px'}}>
+      <Paper withBorder radius='lg' p='xl' style={{maxWidth: '500px'}}>
         <Group position='apart'>
           <Text size='xl' weight={500}>
             Get The Weather!
@@ -51,13 +53,18 @@ export default function Home() {
         <Group position='apart' mb='xs'>
           <TextInput
           label='City Name'
+          icon={<img src='https://img.icons8.com/ios/50/000000/search--v1.png' width={20} height={20} />}
+          alt='Search Icon'
           placeholder='Enter a city e.g. London'
           onChange={(e) => setCity(e.target.value)}
           />
         </Group>
         <Group position='apart'>
-          <Button size='md' variant='gradient' onClick={() => getWeatherData()}>
+          <Button size='md' variant='gradient' gradient={{ from: 'teal', to: 'blue' }} onClick={() => getWeatherData()}>
             Get Weather
+          </Button>
+          <Button size='md' variant='gradient' gradient={{ from: 'teal', to: 'blue' }} onClick={() => window.location.reload()}>
+            Reset Search
           </Button>
         </Group>
         {weatherData?.main && (
@@ -70,14 +77,31 @@ export default function Home() {
             <Group position='left'>
               <img
                 src={`http://openweathermap.org/img/wn/${weatherData?.weather[0].icon}@4x.png`}
+                alt='Weather Icon'
                 width={100}
                 height={100} 
               />
               <Text size='xl' weight={500}>
                 Temperature: {Math.round(weatherData?.main?.temp - 273.15)}°C
                 <Text size='md' weight={500}>
-                  Wind speed: {weatherData?.wind?.speed} m/s
-                  Wind degree: {weatherData?.wind?.deg}°
+                Wind Speed: {weatherData?.wind?.speed} m/s
+                <img
+                src={`https://img.icons8.com/ios/50/000000/wind.png`}
+                alt='Wind Icon'
+                width={20}
+                height={20}
+                style={{marginLeft: '5px', verticalAlign: 'middle'}} 
+              />
+                </Text>
+                <Text size='md' weight={500}>
+                Wind Direction: {weatherData?.wind?.deg}°
+                <img
+                src={`https://img.icons8.com/ios/50/000000/compass.png`}
+                alt='Compass Icon'
+                width={20}
+                height={20}
+                style={{marginLeft: '5px', verticalAlign: 'middle'}} 
+              />
                 </Text>
               </Text>
             </Group>
